@@ -22,5 +22,5 @@
 
 ```
 pip3 install -r requirements.txt
-python3 -m onedrive
+python3 -m drive1bot
 ```
