@@ -35,7 +35,7 @@ log = OneDriveLog()
 
 Interval = []
 
-DOWNLOAD_DIR = "/opt/drive1bot/downloads/"
+DOWNLOAD_DIR = "/path/to/drive1bot/downloads/"
 DOWNLOAD_STATUS_UPDATE_INTERVAL = 3
 
 AUTO_DELETE_MESSAGE_DURATION = 30
