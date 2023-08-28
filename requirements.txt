@@ -1,0 +1,7 @@
+pyrogram
+tgcrypto
+aria2p
+python-dotenv
+pytz
+pymongo
+uvloop
