@@ -21,7 +21,7 @@
 # Fill .env file and run the bot
 
 ```
-apt-get install -y aria2c
+apt-get install -y aria2
 pip3 install -r requirements.txt
 python3 -m drive1bot
 ```
