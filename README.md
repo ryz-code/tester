@@ -21,6 +21,13 @@
 # Fill .env file and run the bot
 
 ```
+apt-get install -y aria2c
 pip3 install -r requirements.txt
 python3 -m drive1bot
+```
+
+# How to run Docker
+```
+docker build -t drive1bot .
+docker run -it drive1bot
 ```
