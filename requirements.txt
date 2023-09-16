@@ -5,3 +5,5 @@ python-dotenv
 pytz
 pymongo
 uvloop
+yt-dlp
+git+https://github.com/Oxhellfire/pymegasdkrest

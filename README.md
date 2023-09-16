@@ -1,33 +1,56 @@
-# Base Repo Credit
-[python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+# What is this repo about?
 
+This is a telegram bot writen in python for mirroring files on the internet to our beloved OneDrive.
 
-# How to get mongodb URI 
-[mongodb](https://telegra.ph/How-to-get-mongodb-URI-08-28)
+## Base Repo
+I'm using this repo [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot) as base
 
+---
+### Repo Features
 
-# How to get 5tb onedrive storage
-[OneDrive 5tb](https://www.youtube.com/watch?v=gcOsnkf1hfc)
+- Mirroring direct download links to OneDrive
+- Mega.nz Support
+- Leeching Support
+- Torrent Support
+- Docker Support
+- Index Support
+- YouTube Support
 
+---
+### Bot Usage
 
-# How to get OneGraph Secret Creadentials
-[Secret Credetials](https://telegra.ph/How-to-get-OneDrive-Secret-Credentials-08-28)
+- /mirror    # aria2c|mega|pyrogram will upload files/folders on OneDrive
+- /leech     # aria2c|mega will leeched files on Telegram Dump's Channel
+- /yt        # YouTube videos will upload files/folders on OneDrive
+- /ytl       # YouTube videos will leeched files on Telegram Dump's Channel
 
+---
+## How to run
 
-# how to generate OneDrive Index
-[OneDrive Index](https://ovi.swo.moe/docs/getting-started)
+#### Fill .env file
 
-
-# Fill .env file and run the bot
-
+### Docker
 ```
-apt-get install -y aria2
+docker build -t drive1bot .; docker run -it drive1bot
+```
+
+### VPS/Pc
+```
+curl -Ls https://github.com/Oxhellfire/pymegasdkrest/releases/download/v6.9/megasdkrest -o /usr/local/bin/megasdkrest
+chmod +x /usr/local/bin/megasdkrest
 pip3 install -r requirements.txt
 python3 -m drive1bot
 ```
 
-# How to run Docker
-```
-docker build -t drive1bot .
-docker run -it drive1bot
-```
+---
+### How to get mongodb URI 
+[mongodb](https://telegra.ph/How-to-get-mongodb-URI-08-28)
+
+### How to get 5tb onedrive storage
+[OneDrive 5tb](https://www.youtube.com/watch?v=gcOsnkf1hfc)
+
+### How to get OneGraph Secret Creadentials
+[Secret Credetials](https://telegra.ph/How-to-get-OneDrive-Secret-Credentials-08-28)
+
+### how to generate OneDrive Index
+[OneDrive Index](https://ovi.swo.moe/docs/getting-started)

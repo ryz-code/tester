@@ -6,18 +6,24 @@ from drive1bot import AUTO_DELETE_MESSAGE_DURATION, OneDriveLog, status_reply_di
 
 log = OneDriveLog()
 
-def sendMessage(text, message):
+def sendMessage(text, message, keyboard=None):
     return message.reply(
         text=text, 
-        parse_mode=ParseMode.MARKDOWN
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
+        reply_markup=keyboard
     )
 
 
-def editMessage(text: str, message):
-    message.edit(
-        text=text,
-        parse_mode=ParseMode.MARKDOWN
-    )
+def editMessage(text, message):
+    try:
+        message.edit(
+            text=text,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True
+        )
+    except:
+        pass
 
 
 def deleteMessage(message):
@@ -28,7 +34,7 @@ def auto_delete_message(cmd_message, bot_message):
     if AUTO_DELETE_MESSAGE_DURATION != -1:
         time.sleep(AUTO_DELETE_MESSAGE_DURATION)
         try:
-            # Skip if None is passed meaning we don't want to delete bot xor cmd message
+            # Skip if None is passed meaning we don't want to delete bot or cmd message
             deleteMessage(cmd_message)
             deleteMessage(bot_message)
         except AttributeError:
@@ -65,5 +71,5 @@ def sendStatusMessage(msg):
             except Exception as e:
                 log.error(str(e))
                 del status_reply_dict[msg.chat.id]
-        message = sendMessage(progress, msg)
+        message = sendMessage(progress, msg, keyboard=None)
         status_reply_dict[msg.chat.id] = message

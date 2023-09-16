@@ -1,7 +1,7 @@
 import threading
 from time import sleep
 from aria2p import API
-from .download_helper import DownloadHelper
+from drive1bot.helper.mirror_utils.download_utils.download_helper import DownloadHelper
 from drive1bot.helper.ext_utils.bot_utils import *
 from drive1bot.helper.telegram_helper.message_utils import *
 from drive1bot import aria2, download_dict_lock, OneDriveLog
@@ -79,4 +79,4 @@ class AriaDownloadHelper(DownloadHelper):
             return
         with download_dict_lock:
             download_dict[listener.uid] = AriaDownloadStatus(download.gid, listener)
-            log.info(f"Started: {download.gid} DIR:{download.dir} ")
+            log.info(f"Started: {download.gid} DIR:{download.dir}")

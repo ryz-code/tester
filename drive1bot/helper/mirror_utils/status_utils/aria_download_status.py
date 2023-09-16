@@ -1,7 +1,6 @@
-from .status import Status
 from drive1bot import aria2, DOWNLOAD_DIR, OneDriveLog
 from drive1bot.helper.ext_utils.bot_utils import MirrorStatus
-
+from drive1bot.helper.mirror_utils.status_utils.status import Status
 
 log = OneDriveLog()
 

@@ -5,7 +5,7 @@ from drive1bot import download_dict, download_dict_lock
 
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
 
-URL_REGEX = r"(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+"
+URL_REGEX = r"(?i)\b(?:https?|ftp)://[-\w.]+(:\d+)?(/([~\w/_.]*)?)?"
 
 class MirrorStatus:
     STATUS_UPLOADING = "Uploading"
@@ -13,8 +13,6 @@ class MirrorStatus:
     STATUS_WAITING = "Queued"
     STATUS_FAILED = "Failed. Cleaning download"
     STATUS_CANCELLED = "Cancelled"
-    STATUS_ARCHIVING = "Archiving"
-    STATUS_EXTRACTING = "Extracting"
 
 
 PROGRESS_MAX_SIZE = 100 // 8
@@ -58,8 +56,7 @@ def getDownloadByGid(gid):
     with download_dict_lock:
         for dl in download_dict.values():
             status = dl.status()
-            if status != MirrorStatus.STATUS_UPLOADING and status != MirrorStatus.STATUS_ARCHIVING \
-                    and status != MirrorStatus.STATUS_EXTRACTING:
+            if status != MirrorStatus.STATUS_UPLOADING:
                 if dl.gid() == gid:
                     return dl
     return None
@@ -93,11 +90,17 @@ def get_readable_message():
     with download_dict_lock:
         progress_message = ""
         for download in list(download_dict.values()):
+            chat_id = str(download.message.chat.id).removeprefix("-100")
+            message_link = f"https://t.me/{download.message.chat.username or f'c/{chat_id}'}/{download.message.id}"
+            user = download.message.from_user
+            new_line = "\n" if download.status() == MirrorStatus.STATUS_UPLOADING else ""
+            username = f"@{user.username}" if user.username else f"[{user.first_name}]({f'tg://user?id={user.id}'})"
             progress_message += (
-                f"**\n{download.status()}**: `{download.name()}`\n"
+                f"**[{download.status()}]({message_link})**: `{download.name()}`\n"
                 f"{get_progress_bar_string(download)} {download.progress()}\n"
                 f"**Processed**: {get_readable_file_size(download.processed_bytes())} of {download.size()}\n"
                 f"**Speed**: {download.speed()} | **ETA**: {download.eta()}\n"
+                f"**User**: {username} | **ID**: `{user.id}`\n{new_line}"
             )
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
                 if hasattr(download, 'is_torrent'):
@@ -105,7 +108,7 @@ def get_readable_message():
                         f"**Seeders**: {download.aria_download().num_seeders} | **Leechers**: {download.aria_download().connections}\n"
                     )
                 progress_message += (
-                    f"`/cancel {download.gid()}`\n\n"
+                    f"/cancel_{download.gid()}\n\n"
                 )
         return progress_message
     
@@ -127,6 +130,10 @@ def get_readable_time(seconds: int) -> str:
     seconds = int(seconds)
     result += f'{seconds}s'
     return result
+
+
+def is_mega_link(url: str):
+    return "mega.nz" in url
 
 
 def is_url(url: str):
