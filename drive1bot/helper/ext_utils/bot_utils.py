@@ -1,6 +1,7 @@
 import re
 import time
 import threading
+from telegraph import Telegraph
 from drive1bot import download_dict, download_dict_lock
 
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
@@ -148,6 +149,22 @@ def is_magnet(url: str):
     if magnet:
         return True
     return False
+
+
+telegraph = Telegraph(domain="graph.org")
+telegraph.create_account(short_name="0xhellfire")
+
+def telegraph_page(title, items):
+    drive1bot_logo = f"<img src='https://gcdnb.pbrd.co/images/5SOosCKUJuL0.png?o=1' alt='drive1bot'>"
+    item_content = "<p>" + "</p><p>".join(items) + "</p>"
+    title_content = f"<pre>Search Result for: <strong>{title}</strong></pre><br>" if title is not None else ""
+    page_content = f"{title_content}{drive1bot_logo}{item_content}"
+    response = telegraph.create_page(
+        title="Drive1bot-Search" if title is not None else "Drive1bot-List",
+        author_name="drive1bot", 
+        html_content=page_content
+    )
+    return response['url']
 
 
 def new_thread(fn):

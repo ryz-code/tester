@@ -180,9 +180,85 @@ class OneDriveHelper:
         log.info("Deleting downloaded file/folder..")
     
     
-    def create_directory(self, directory_name):
-        request_url = f"{DRIVE_URI}/root/children"
-        body = {"name": directory_name, "folder": {}}
-        response = requests.post(request_url, headers=HEADERS, json=body).json()
-        folder_id = response["id"]
-        return folder_id
+    def searching(self, query):
+        matching_items = []
+        
+        def search_recursive(folder_id, folder_path, depth=0):
+            nonlocal found_match
+            # you can adjust this depth according to you more depth more time taking
+            if depth == 5:
+                return
+
+            response = requests.get(f"{DRIVE_URI}/items/{folder_id}/children", headers=HEADERS)
+            if response.status_code == 200:
+                item_list = response.json().get("value", [])
+                for item in item_list:
+                    if query.lower() in item["name"].lower() and item['size'] > 0:
+                        item_type = "folder" if "folder" in item else "file"
+                        full_path = f'{folder_path}/{item["name"]}'
+                        link = f"<a href='{os.getenv('INDEX_DOMAIN')}/api/raw/?path={quote(full_path)}'>{item['name']}</a>"
+                        _name = f"<strong>Name:</strong> {link}"
+                        _type = f"<strong>Type:</strong> {item_type}"
+                        size = f"<strong>Size:</strong> {get_readable_file_size(item['size'])}"
+                        item_html = f"<br>{_name}<br>{size}<br>{_type}<br>"
+                        item_id = f"<strong>ID:</strong> {item['id']}"
+                        item_html += f"<pre>{item_id}</pre>"
+                            
+                        matching_items.append(item_html)
+                        found_match = True
+
+                    if "folder" in item:
+                        subfolder_path = f"{folder_path}/{item['name']}"
+                        search_recursive(item["id"], subfolder_path, depth + 1)
+            else:
+                return f"Request failed: {response.status_code}"
+
+
+        if len(query) < 2:
+           return "Query should be 3 or more than characters"
+
+        found_match = False
+        search_recursive("root", "")
+        
+        if not found_match:
+            return f"No matches found for {query}"
+            
+        if matching_items:
+            telegraph_link = telegraph_page(query, matching_items)
+            return telegraph_link
+        
+        
+    def list_directory(self, folder_id=None):
+        _id = "root" if folder_id is None else folder_id
+        list_items = []
+        response = requests.get(f"{DRIVE_URI}/items/{_id}/children", headers=HEADERS)
+        if response.status_code == 200:
+            item_list = response.json().get("value", {})
+            for item in item_list:
+                if item['size'] > 0:
+                    item_type = "folder" if "folder" in item else "file"
+                    link = f"<a href='{os.getenv('INDEX_DOMAIN')}/api/raw/?path=/{quote(item['name'])}'>{item['name']}</a>"
+                    _name = f"<strong>Name:</strong> {link}"
+                    _type = f"<strong>Type:</strong> {item_type}"
+                    size = f"<strong>Size:</strong> {get_readable_file_size(item['size'])}"
+                    item_html = f"<br>{_name}<br>{size}<br>{_type}<br>"
+                    item_id = f"<strong>ID:</strong> {item['id']}"
+                    item_html += f"<pre>{item_id}</pre>"
+                        
+                    list_items.append(item_html)
+        else:
+            return f"Request failed: {response.status_code}"
+                    
+        if list_items:
+            telegraph_link = telegraph_page(None, list_items)
+            return telegraph_link
+        
+        
+    def delete_items(self, _id):
+        response = requests.delete(f"{DRIVE_URI}/items/{_id}", headers=HEADERS)
+        if response.status_code == 204:
+            return f"{_id} Deleted"
+        if response.status_code == 400:
+            return "Provided ID is Wrong"
+        if response.status_code == 404:
+            return "Item Already Deleted"

@@ -6,4 +6,5 @@ pytz
 pymongo
 uvloop
 yt-dlp
+telegraph
 git+https://github.com/Oxhellfire/pymegasdkrest

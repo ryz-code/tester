@@ -116,8 +116,28 @@ if len(CHAT_ID) == 0:
     exit(1)
 else:
     CHAT_ID = int(CHAT_ID)
-    
-    
+
+
+API_ID = os.environ.get('API_ID', '')
+API_HASH = os.environ.get('API_HASH', '')
+
+USER_ID = os.environ.get('USER_ID', '')
+USER_HASH = os.environ.get('USER_HASH', '')
+SESSION_STRING = os.environ.get('SESSION_STRING', '')
+
+app = pClient("drive1bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+userbot = pClient("drive1user", api_id=USER_ID, api_hash=USER_HASH, session_string=SESSION_STRING)
+
+log.info("Starting Bot")
+app.start()
+log.info("Starting User")
+userbot.start()
+
+PREMIUM_USER = userbot.get_me().is_premium
+
+BOT_NAME = app.get_me().first_name + (app.get_me().last_name or "")
+USERBOT_NAME = userbot.get_me().first_name + (userbot.get_me().last_name or "")
+
 MEGA_USERNAME = os.environ.get('MEGA_USERNAME', '')
 if len(MEGA_USERNAME) == 0:
     log.error("MEGA_USERNAME variable is missing! Exiting now")
@@ -144,29 +164,9 @@ ENV_VARS = {
 subprocess.Popen(["/usr/local/bin/megasdkrest"], env=ENV_VARS, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(1)  # Wait for the mega server to start listening
 mega_client = MegaSdkRestClient('http://localhost:6969')
+log.info("Mega Client Started")
 try:
     mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
 except mega_err.MegaSdkRestClientException as e:
     log.error(e.message['message'])
     exit(0)
-
-
-API_ID = os.environ.get('API_ID', '')
-API_HASH = os.environ.get('API_HASH', '')
-
-USER_ID = os.environ.get('USER_ID', '')
-USER_HASH = os.environ.get('USER_HASH', '')
-SESSION_STRING = os.environ.get('SESSION_STRING', '')
-
-app = pClient("drive1bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-userbot = pClient("drive1user", api_id=USER_ID, api_hash=USER_HASH, session_string=SESSION_STRING)
-
-log.info("Starting Bot")
-app.start()
-log.info("Starting User")
-userbot.start()
-
-PREMIUM_USER = userbot.get_me().is_premium
-
-BOT_NAME = app.get_me().first_name + (app.get_me().last_name or "")
-USERBOT_NAME = userbot.get_me().first_name + (userbot.get_me().last_name or "")

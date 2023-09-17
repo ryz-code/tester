@@ -1,3 +1,9 @@
+<img src='https://gcdnb.pbrd.co/images/5SOosCKUJuL0.png?o=1' alt='drive1bot'>
+
+## Join Our Channel and Group for Support
+[Drive1bot ( support group )](https://t.me/drive1botgroup) | [Drive1bot Channel](https://t.me/drive1botchannel)
+
+
 # What is this repo about?
 
 This is a telegram bot writen in python for mirroring files on the internet to our beloved OneDrive.
@@ -23,6 +29,10 @@ I'm using this repo [python-aria-mirror-bot](https://github.com/lzzy12/python-ar
 - /leech     # aria2c|mega will leeched files on Telegram Dump's Channel
 - /yt        # YouTube videos will upload files/folders on OneDrive
 - /ytl       # YouTube videos will leeched files on Telegram Dump's Channel
+- /status    # for checking message status
+- /search query    # Search file/folder in Onedrive
+- /list or /list ID    # List root folder or Specific folder by folder ID
+- /delete ITEM_ID   # Delete file/folder by ID 
 
 ---
 ## How to run
