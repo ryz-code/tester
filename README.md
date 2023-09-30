@@ -54,13 +54,13 @@ python3 -m drive1bot
 
 ---
 ### How to get mongodb URI 
-[mongodb](https://telegra.ph/How-to-get-mongodb-URI-08-28)
+[mongodb](https://graph.org/How-to-get-mongodb-URI-08-28)
 
 ### How to get 5tb onedrive storage
 [OneDrive 5tb](https://www.youtube.com/watch?v=gcOsnkf1hfc)
 
 ### How to get OneGraph Secret Creadentials
-[Secret Credetials](https://telegra.ph/How-to-get-OneDrive-Secret-Credentials-08-28)
+[Secret Credetials](https://graph.org/How-to-get-OneDrive-Secret-Credentials-08-28)
 
 ### how to generate OneDrive Index
 [OneDrive Index](https://ovi.swo.moe/docs/getting-started)
