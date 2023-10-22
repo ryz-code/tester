@@ -9,14 +9,15 @@ from drive1bot.helper.mirror_utils.upload_utils import pyrogramtool
 from drive1bot.helper.mirror_utils.status_utils.upload_status import UploadStatus
 from drive1bot.helper.mirror_utils.download_utils.aria2_download import AriaDownloadHelper
 from drive1bot.helper.mirror_utils.download_utils.telegram_downloader import TelegramDownloadHelper
-from drive1bot.helper.mirror_utils.download_utils.mega_download import MegaDownloader
 
 from drive1bot import (
     DOWNLOAD_DIR, DOWNLOAD_STATUS_UPDATE_INTERVAL, 
     download_dict, download_dict_lock, Interval, 
-    OneDriveLog, app, CHAT_ID, OWNER_ID
+    OneDriveLog, app, CHAT_ID, OWNER_ID, MEGA_USERNAME, MEGA_PASSWORD
 )
 from pyrogram import filters
+if MEGA_USERNAME is not None and MEGA_PASSWORD is not None:
+    from drive1bot.helper.mirror_utils.download_utils.mega_download import MegaDownloader
 
 ariaDlManager = AriaDownloadHelper()
 ariaDlManager.start_listener()
@@ -197,16 +198,21 @@ def _mirror(message, leech=None):
                 else:
                     link = file.get_file().file_path
     
+    listener = MirrorListener(message, leech)
+
     if not bot_utils.is_url(link) and not bot_utils.is_magnet(link):
         sendMessage('No download source provided', message, keyboard=None)
         return
-
-    listener = MirrorListener(message, leech)
-    if bot_utils.is_mega_link(link):
-        mega_dl = MegaDownloader(listener)
-        mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/')
+    elif "mega" in link.lower() and (MEGA_USERNAME is None or MEGA_PASSWORD is None):
+        sendMessage('You need to set Mega creds for Mega download.', message, keyboard=None)
+        return
     else:
-        ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener)
+        if MEGA_USERNAME is not None and MEGA_PASSWORD is not None and bot_utils.is_mega_link(link):
+            mega_dl = MegaDownloader(listener)
+            mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/')
+        else:
+            ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener)
+
     sendStatusMessage(message)
     if len(Interval) == 0:
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))

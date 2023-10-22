@@ -6,7 +6,6 @@ import subprocess
 from pyrogram import Client as pClient
 from datetime import datetime
 from dotenv import load_dotenv
-from pymegasdkrest import MegaSdkRestClient, errors as mega_err
 
 
 file_names = ['megalog.txt', 'drive1bot.txt']
@@ -17,6 +16,9 @@ for file_name in file_names:
     
     
 load_dotenv()
+
+if os.environ.get('MEGA_USERNAME', None) is not None and os.environ.get('MEGA_PASSWORD', None) is not None:
+    from pymegasdkrest import MegaSdkRestClient, errors as mega_err
 
 
 class OneDriveLog:
@@ -138,35 +140,39 @@ PREMIUM_USER = userbot.get_me().is_premium
 BOT_NAME = app.get_me().first_name + (app.get_me().last_name or "")
 USERBOT_NAME = userbot.get_me().first_name + (userbot.get_me().last_name or "")
 
-MEGA_USERNAME = os.environ.get('MEGA_USERNAME', '')
-if len(MEGA_USERNAME) == 0:
-    log.error("MEGA_USERNAME variable is missing! Exiting now")
-    exit(1)
-else:
-    MEGA_USERNAME = MEGA_USERNAME
+MEGA_USERNAME = os.environ.get('MEGA_USERNAME', None)
+if MEGA_USERNAME:
+    if len(MEGA_USERNAME) == 0:
+        log.error("MEGA_USERNAME variable is missing! Exiting now")
+        exit(1)
+    else:
+        MEGA_USERNAME = MEGA_USERNAME
     
-MEGA_PASSWORD = os.environ.get('MEGA_PASSWORD', '')
-if len(MEGA_PASSWORD) == 0:
-    log.error("MEGA_PASSWORD variable is missing! Exiting now")
-    exit(1)
-else:
-    MEGA_PASSWORD = MEGA_PASSWORD
-    
-# Start megasdkrest binary
-ENV_VARS = {
-    # "APP_PORT": "4000", # you can change port default is 6969
-    # "MEGA_DEBUG": "false", # if you want debug log enable and make it "true"
-    "APP_THREADS": "3",
-    "MEGA_THREADS": "3",
-    "LOG_FILE": "megalog.txt",
-}
+MEGA_PASSWORD = os.environ.get('MEGA_PASSWORD', None)
+if MEGA_PASSWORD:
+    if len(MEGA_PASSWORD) == 0:
+        log.error("MEGA_PASSWORD variable is missing! Exiting now")
+        exit(1)
+    else:
+        MEGA_PASSWORD = MEGA_PASSWORD
 
-subprocess.Popen(["/usr/local/bin/megasdkrest"], env=ENV_VARS, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-time.sleep(1)  # Wait for the mega server to start listening
-mega_client = MegaSdkRestClient('http://localhost:6969')
-log.info("Mega Client Started")
-try:
-    mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
-except mega_err.MegaSdkRestClientException as e:
-    log.error(e.message['message'])
-    exit(0)
+
+if MEGA_PASSWORD and MEGA_USERNAME:
+    # Start megasdkrest binary
+    ENV_VARS = {
+        # "APP_PORT": "4000", # you can change port default is 6969
+        # "MEGA_DEBUG": "false", # if you want debug log enable and make it "true"
+        "APP_THREADS": "3",
+        "MEGA_THREADS": "3",
+        "LOG_FILE": "megalog.txt",
+    }
+
+    subprocess.Popen(["/usr/local/bin/megasdkrest"], env=ENV_VARS, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(1)  # Wait for the mega server to start listening
+    mega_client = MegaSdkRestClient('http://localhost:6969')
+    log.info("Mega Client Started")
+    try:
+        mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
+    except mega_err.MegaSdkRestClientException as e:
+        log.error(e.message['message'])
+        exit(0)

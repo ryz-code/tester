@@ -1,12 +1,9 @@
 import shutil
 import asyncio
-# import importlib
 import os
 import subprocess
 from uvloop import install
-from dotenv import load_dotenv
 from pyrogram import idle, filters
-from pyrogram.enums import ParseMode
 from contextlib import closing, suppress
 from drive1bot import app, OneDriveLog, BOT_NAME, DOWNLOAD_DIR, USERBOT_NAME
 import glob
