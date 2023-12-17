@@ -74,9 +74,8 @@
             "description": "If you want to make the server ping itself every `PING_INTERVAL` seconds to avoid sleeping. Helpful in PaaS Free tiers. Defaults to `False`",
         },
         "SESSION_STRING": {
-            "description": "URL to your Terms of Service Text",
-            "required": false
-        },
+            "description": "URL to your Terms of Service Te
+        }
     },
     "buildpacks": [{
         "url": "heroku/python"
