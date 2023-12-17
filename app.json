@@ -5,11 +5,14 @@
         "telegram",
         "web",
         "pyrogram",
-        "aiohttp",
-        "python",
-        "plugin",
-        "modular",
-        "media"
+        "tgcrypto",
+        "aria2p",
+        "python-dotenv",
+        "pytz",
+        "pymongo"
+        "uvloop"
+        "yt-dlp"
+        "telegraph"
       ],
     "repository": "https://github.com/SpringsFern/FileStreamBot",
     "success_url": "/",
@@ -84,4 +87,4 @@
             "size": "Eco"
         }
     }
-  }￼Enter
+}
